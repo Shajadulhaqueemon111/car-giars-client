@@ -1,12 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useState } from "react";
 import { EyeIcon, EyeOff } from "lucide-react";
 import GoogleLoginBtn from "../components/pages/shared/GoogleLoginBtn";
 
+import nexiosInstance from "@/config/nexious.config";
+import toast from "react-hot-toast";
+interface RegisterResponse {
+  success?: boolean;
+  message?: string;
+  data?: any;
+}
 const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
 
-  const handelRegister = (e: React.FormEvent<HTMLFormElement>) => {
+  const handelRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const form = e.target as HTMLFormElement;
@@ -21,6 +29,29 @@ const RegisterPage = () => {
       password,
     };
     console.log(newUser);
+
+    try {
+      const res = await nexiosInstance.post<RegisterResponse>(
+        "/auth/register",
+        newUser
+      );
+      console.log(res.data, "res.data");
+
+      if (res.data?.success) {
+        toast.success("User registered successfully");
+      } else {
+        toast.error("User Already Exists");
+      }
+    } catch (error: any) {
+      console.log(error);
+
+      // Check if the error response contains a message
+      if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Something went wrong! Please try again.");
+      }
+    }
   };
 
   return (

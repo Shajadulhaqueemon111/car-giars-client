@@ -2,6 +2,8 @@
 // import { useAuth } from "@/lib/AuthProviders";
 
 import { ThemeSwitcher } from "@/app/(commonLayOut)/components/pages/shared/ThemeSwicher";
+import { logOut } from "@/app/(commonLayOut)/login";
+import { useUser } from "@/context/AuthContext";
 import {
   Avatar,
   Dropdown,
@@ -10,15 +12,16 @@ import {
   DropdownTrigger,
   NavbarItem,
 } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 
 export const UserDropdown = () => {
-  //   const router = useRouter();
-  //   const {user,setUser} = useAuth();
-  //   const logOutUser = async () => {
-  //     await logOut();
-  //     setUser(null)
-  //     router.push("/")
-  //   };
+  const router = useRouter();
+  const { setUser } = useUser();
+  const logOutUser = async () => {
+    await logOut();
+    setUser(null);
+    router.push("/login");
+  };
   return (
     <Dropdown>
       <NavbarItem>
@@ -49,7 +52,7 @@ export const UserDropdown = () => {
         <DropdownItem key="configurations">Configurations</DropdownItem>
         <DropdownItem key="help_and_feedback">Help & Feedback</DropdownItem>
         <DropdownItem
-          //   onClick={() => logOutUser()}
+          onClick={logOutUser}
           key="logout"
           color="danger"
           className="text-danger "

@@ -6,6 +6,7 @@ const nexiosInstance = new Nexios({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 export default nexiosInstance;
