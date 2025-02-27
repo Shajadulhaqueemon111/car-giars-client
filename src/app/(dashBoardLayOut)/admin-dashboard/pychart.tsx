@@ -84,7 +84,7 @@ const PyChart = () => {
   };
 
   return (
-    <div className="lg:w-1/2 mx-auto">
+    <div className="">
       <h2 className="text-center text-xl font-bold my-4">Bar Chart</h2>
       <Bar data={data} options={options} />
     </div>

@@ -1,9 +1,49 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable jsx-a11y/alt-text */
+"use client";
 
 import PyChart from "./pychart";
-
+import { useEffect, useState } from "react";
+import nexiosInstance from "@/config/nexious.config";
+type User = {
+  _id: string;
+  name: string;
+  email: string;
+  role?: string;
+  img?: string;
+  location?: string;
+};
+type ApiResponse<T> = {
+  success: boolean;
+  message?: string;
+  data: T;
+};
 const AdminDashboard = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await nexiosInstance.get<ApiResponse<User[]>>(
+          "/users"
+        );
+        console.log("API Response:", response.data);
+
+        if (response.data && Array.isArray(response.data?.data)) {
+          setUsers(response?.data?.data);
+          console.log("Total Users:", response.data.data.length); //
+        } else {
+          console.error("Unexpected API response structure:", response.data);
+          setUsers([]);
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        setUsers([]);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
   return (
     <div className="">
       <h1 className="text-2xl text-center mb-3 font-bold mx-auto">
@@ -28,8 +68,8 @@ const AdminDashboard = () => {
               </svg>
             </div>
             <div className="stat-title">Total User</div>
-            <div className="stat-value text-primary">25.6K</div>
-            <div className="stat-desc">21% more than last month</div>
+            <div className="stat-value text-primary">{users?.length}</div>
+            <div className="stat-desc"> last month</div>
           </div>
 
           <div className="stat">

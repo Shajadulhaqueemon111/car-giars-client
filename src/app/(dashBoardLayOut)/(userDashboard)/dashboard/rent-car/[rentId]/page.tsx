@@ -12,11 +12,11 @@ type ApiResponse = {
   role: string;
 };
 
-const UpdateUserRole: React.FC = () => {
+const UpdatedStatus: React.FC = () => {
   const router = useRouter();
-  const { userId } = useParams();
+  const { rentId } = useParams();
 
-  const [role, setRole] = useState("users");
+  const [rentStatus, setrentStatus] = useState("pending");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -36,8 +36,8 @@ const UpdateUserRole: React.FC = () => {
     try {
       const response = await axios.request<ApiResponse>({
         method: "PATCH",
-        url: `http://localhost:5000/api/v1/users/${userId}`,
-        data: { role },
+        url: `http://localhost:5000/api/v1/rents/${rentId}`,
+        data: { rentStatus },
         headers: {
           Authorization: ` ${token}`,
         },
@@ -46,10 +46,10 @@ const UpdateUserRole: React.FC = () => {
 
       if (response.data.success) {
         toast.success("User role updated successfully!");
-        setMessage("✅ User role updated successfully!");
-        router.push("/admin-dashboard/users-management");
+        setMessage("✅ User rent status updated successfully!");
+        router.push("/dashboard/rent-car");
         // Reset form after success
-        setRole("users");
+        setrentStatus("users");
       } else {
         setMessage("⚠️ Failed to update user role.");
       }
@@ -72,15 +72,15 @@ const UpdateUserRole: React.FC = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Role Selector */}
         <select
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
+          value={rentStatus}
+          onChange={(e) => setrentStatus(e.target.value)}
           className="select select-bordered w-full"
           required
         >
-          <option value="user">user</option>
+          <option value="pending">pending</option>
 
-          <option value="admin">admin</option>
-          <option value="driver">driver</option>
+          <option value="ongoing">ongoing</option>
+          <option value="completed">compleled</option>
         </select>
 
         {/* Submit Button */}
@@ -89,11 +89,11 @@ const UpdateUserRole: React.FC = () => {
           className="btn btn-primary w-full"
           disabled={loading}
         >
-          {loading ? "Updating..." : "Update Role"}
+          {loading ? "Updating..." : "Update Status"}
         </button>
       </form>
     </div>
   );
 };
 
-export default UpdateUserRole;
+export default UpdatedStatus;

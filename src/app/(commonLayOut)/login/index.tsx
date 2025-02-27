@@ -84,3 +84,19 @@ export const getCookies = async () => {
     return accessToken;
   }
 };
+
+// export const getNewAccessToken = async () => {
+//   try {
+//     const refressToken = (await cookies()).get("refressToken")?.value;
+//     const res = await nexiosInstance({
+//       url: "/auth/refressToken",
+//       method: "POST",
+//       headers: {
+//         cookies: `refressToken'=${refressToken}`,
+//       },
+//     });
+//     return res.data;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };

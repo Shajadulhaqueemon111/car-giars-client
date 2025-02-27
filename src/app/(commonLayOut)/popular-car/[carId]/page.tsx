@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import nexiosInstance from "@/config/nexious.config";
 import { Card, CardFooter, CardHeader, Image } from "@heroui/react";
-import Link from "next/link";
 import React from "react";
 
-const CarsDetailsPage = async ({ params }: { params: { carId: string } }) => {
+const PopularCarsDetailsPage = async ({
+  params,
+}: {
+  params: { carId: string };
+}) => {
   // fetch with filter parameterd
 
   const res: any = await nexiosInstance.get(`/cars/${params.carId}`, {
@@ -63,11 +66,9 @@ const CarsDetailsPage = async ({ params }: { params: { carId: string } }) => {
             <button className="px-6 py-3 rounded-lg border border-gray-300 dark:border-white text-gray-900 dark:text-white hover:bg-gray-900 hover:text-white dark:hover:bg-white dark:hover:text-black transition-all">
               Explore More
             </button>
-            <Link href={`/cars/cars/${data._id}`}>
-              <button className="px-6 py-3 rounded-lg bg-gray-900 text-white dark:bg-white dark:text-black hover:bg-gray-700 dark:hover:bg-gray-300 transition-all">
-                Contact Dealer
-              </button>
-            </Link>
+            <button className="px-6 py-3 rounded-lg bg-gray-900 text-white dark:bg-white dark:text-black hover:bg-gray-700 dark:hover:bg-gray-300 transition-all">
+              Contact Dealer
+            </button>
           </div>
         </CardFooter>
       </Card>
@@ -75,4 +76,4 @@ const CarsDetailsPage = async ({ params }: { params: { carId: string } }) => {
   );
 };
 
-export default CarsDetailsPage;
+export default PopularCarsDetailsPage;
