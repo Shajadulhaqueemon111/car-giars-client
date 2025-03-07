@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import nexiosInstance from "@/config/nexious.config";
@@ -28,10 +27,10 @@ const CarsDetailsPage = () => {
   useEffect(() => {
     const fetchCarData = async () => {
       try {
-        const res = await nexiosInstance.get<{ data: Car }>(`/cars/${carId}`, {
-          cache: "no-store",
-          next: {},
-        });
+        const res = await nexiosInstance.get<{ data: Car }>(
+          `/cars/${carId}`,
+          {}
+        );
 
         setCarData(res.data.data); // ✅ No more 'unknown' error
       } catch (error) {
