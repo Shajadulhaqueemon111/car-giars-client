@@ -1,10 +1,11 @@
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable jsx-a11y/alt-text */
 "use client";
 
 import PyChart from "./pychart";
 import { useEffect, useState } from "react";
 import nexiosInstance from "@/config/nexious.config";
+import { User, ShoppingCart, CheckCircle } from "lucide-react";
+import { motion } from "framer-motion";
+
 type User = {
   _id: string;
   name: string;
@@ -13,24 +14,24 @@ type User = {
   img?: string;
   location?: string;
 };
+
 type ApiResponse<T> = {
   success: boolean;
   message?: string;
   data: T;
 };
+
 const AdminDashboard = () => {
   const [users, setUsers] = useState<User[]>([]);
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await nexiosInstance.get<ApiResponse<User[]>>(
           "/users"
         );
-        console.log("API Response:", response.data);
-
         if (response.data && Array.isArray(response.data?.data)) {
           setUsers(response?.data?.data);
-          console.log("Total Users:", response.data.data.length); //
         } else {
           console.error("Unexpected API response structure:", response.data);
           setUsers([]);
@@ -40,75 +41,56 @@ const AdminDashboard = () => {
         setUsers([]);
       }
     };
-
     fetchUsers();
   }, []);
 
   return (
-    <div className="">
-      <h1 className="text-2xl text-center mb-3 font-bold mx-auto">
-        Admin Dashboard
-      </h1>
-      <div className="w-3/5 mx-auto">
-        <div className="stats shadow">
-          <div className="stat">
-            <div className="stat-figure text-primary">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                className="inline-block h-8 w-8 stroke-current"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                ></path>
-              </svg>
-            </div>
-            <div className="stat-title">Total User</div>
-            <div className="stat-value text-primary">{users?.length}</div>
-            <div className="stat-desc"> last month</div>
-          </div>
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <h1 className="text-3xl font-bold text-center mb-6">Admin Dashboard</h1>
 
-          <div className="stat">
-            <div className="stat-figure text-secondary">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                className="inline-block h-8 w-8 stroke-current"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                ></path>
-              </svg>
-            </div>
-            <div className="stat-title">Total Sale</div>
-            <div className="stat-value text-secondary">2.6M</div>
-            <div className="stat-desc">21% more than last month</div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="stat shadow-md bg-white p-6 rounded-lg"
+        >
+          <div className="flex items-center gap-3">
+            <User className="w-10 h-10 text-blue-500" />
+            <h2 className="text-lg font-semibold">Total Users</h2>
           </div>
+          <p className="text-4xl font-bold text-blue-600 mt-3">
+            {users?.length}
+          </p>
+          <p className="text-gray-500">Updated just now</p>
+        </motion.div>
 
-          <div className="stat">
-            <div className="stat-figure text-secondary">
-              <div className="avatar online">
-                <div className="w-16 rounded-full">
-                  <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
-                </div>
-              </div>
-            </div>
-            <div className="stat-value">86%</div>
-            <div className="stat-title">Tasks done</div>
-            <div className="stat-desc text-secondary">31 tasks remaining</div>
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="stat shadow-md bg-white p-6 rounded-lg"
+        >
+          <div className="flex items-center gap-3">
+            <ShoppingCart className="w-10 h-10 text-green-500" />
+            <h2 className="text-lg font-semibold">Total Sales</h2>
           </div>
-        </div>
+          <p className="text-4xl font-bold text-green-600 mt-3">$2.6M</p>
+          <p className="text-gray-500">21% more than last month</p>
+        </motion.div>
+
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          className="stat shadow-md bg-white p-6 rounded-lg"
+        >
+          <div className="flex items-center gap-3">
+            <CheckCircle className="w-10 h-10 text-purple-500" />
+            <h2 className="text-lg font-semibold">Tasks Completed</h2>
+          </div>
+          <p className="text-4xl font-bold text-purple-600 mt-3">86%</p>
+          <p className="text-gray-500">31 tasks remaining</p>
+        </motion.div>
       </div>
-      <div>
-        <PyChart></PyChart>
+
+      <div className="mt-8 bg-white p-6 rounded-xl shadow-md">
+        <h2 className="text-xl font-semibold mb-4">User Growth Analytics</h2>
+        <PyChart />
       </div>
     </div>
   );

@@ -61,6 +61,12 @@ export const AdminSidebarWrapper = () => {
                 icon={<Car />}
                 href="/admin-dashboard/rent-all-cars"
               />
+              <SidebarItem
+                isActive={pathname === "/admin-dashboard/bids-all-cars"}
+                title="bids-all-cars"
+                icon={<Car />}
+                href="/admin-dashboard/bids-all-cars"
+              />
               <CollapseItems
                 icon={<Home />}
                 items={["Banks Accounts", "Credit Cards"]}

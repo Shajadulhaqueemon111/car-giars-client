@@ -4,7 +4,7 @@ import nexiosInstance from "@/config/nexious.config";
 import { Card, CardFooter, CardHeader, Image, Link } from "@nextui-org/react";
 
 const Cars = async () => {
-  // const res = await fetch("http://localhost:5000/api/v1/cars", {
+  // const res = await fetch("https://apollo-gears-backend-tau.vercel.app/api/v1/cars", {
   //   next: {},
   //   cache: "no-store",
   // });

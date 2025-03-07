@@ -4,25 +4,25 @@ import { useRouter } from "next/navigation";
 import { Cog } from "lucide-react";
 import Link from "next/link";
 import { ThemeSwitcher } from "./ThemeSwicher";
+
+import { logOut } from "@/app/(commonLayOut)/login";
+import { useUser } from "@/context/AuthContext";
 import {
   Button,
   Navbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-} from "@heroui/react";
-import { logOut } from "@/app/(commonLayOut)/login";
-import { useUser } from "@/context/AuthContext";
+} from "@nextui-org/react";
 
 const NavbarPage = () => {
   const { user, fetchUser } = useUser();
-  const router = useRouter(); // useRouter for navigation
-  // const pathname = usePathname();
-  // Handle Logout
+  const router = useRouter();
+
   const handleLogout = async () => {
     await logOut();
     await fetchUser();
-    router.push("/login"); // Redirect using useRouter
+    router.push("/login");
   };
 
   const routeMap: Record<string, string> = {
@@ -31,12 +31,10 @@ const NavbarPage = () => {
     driver: "/driver-dashboard",
   };
 
-  // Redirect user based on role when user data is available
   // useEffect(() => {
   //   if (user?.role) {
   //     const targetRoute = routeMap[user.role] || "/dashboard";
 
-  //     // ✅ Only redirect if user is NOT already on the correct page and NOT going to home
   //     if (pathname !== targetRoute && pathname !== "/") {
   //       router.push(targetRoute);
   //     }
@@ -59,7 +57,7 @@ const NavbarPage = () => {
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/customers">Customers</Link>
+          <Link href="/aboute">aboute</Link>
         </NavbarItem>
         <NavbarItem>
           <NavbarItem>

@@ -9,14 +9,14 @@ import toast from "react-hot-toast";
 type ApiResponse = {
   success: boolean;
   message?: string;
-  role: string;
+  bidStatus: string;
 };
 
-const UpdateUserRole: React.FC = () => {
+const UpdatedStatus: React.FC = () => {
   const router = useRouter();
-  const { userId } = useParams();
+  const { bidId } = useParams();
 
-  const [role, setRole] = useState("users");
+  const [bidStatus, setBidStatus] = useState("pending");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -36,8 +36,8 @@ const UpdateUserRole: React.FC = () => {
     try {
       const response = await axios.request<ApiResponse>({
         method: "PATCH",
-        url: `https://apollo-gears-backend-tau.vercel.app/api/v1/users/${userId}`,
-        data: { role },
+        url: `https://apollo-gears-backend-tau.vercel.app/api/v1/bids/${bidId}`,
+        data: { bidStatus },
         headers: {
           Authorization: ` ${token}`,
         },
@@ -45,16 +45,16 @@ const UpdateUserRole: React.FC = () => {
       });
 
       if (response.data.success) {
-        toast.success("User role updated successfully!");
-        setMessage("✅ User role updated successfully!");
-        router.push("/admin-dashboard/users-management");
+        toast.success("Driver Bids status updated successfully!");
+        setMessage("✅ Driver Bids status updated successfully!");
+        router.push("/driver-dashboard/manage-all-bids");
         // Reset form after success
-        setRole("users");
+        setBidStatus("users");
       } else {
-        setMessage("⚠️ Failed to update user role.");
+        setMessage("⚠️ Failed to update bid Status");
       }
     } catch (error: any) {
-      toast.error("⚠️ Failed to update user role.");
+      toast.error("⚠️ Failed to update bid Status");
       console.error("Error updating role:", error);
       setMessage(error.response?.data?.message || " Something went wrong.");
     } finally {
@@ -72,15 +72,15 @@ const UpdateUserRole: React.FC = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Role Selector */}
         <select
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
+          value={bidStatus}
+          onChange={(e) => setBidStatus(e.target.value)}
           className="select select-bordered w-full"
           required
         >
-          <option value="user">user</option>
+          <option value="pending">pending</option>
 
-          <option value="admin">admin</option>
-          <option value="driver">driver</option>
+          <option value="accepted">accepted</option>
+          <option value="rejected">rejected</option>
         </select>
 
         {/* Submit Button */}
@@ -89,11 +89,11 @@ const UpdateUserRole: React.FC = () => {
           className="btn btn-primary w-full"
           disabled={loading}
         >
-          {loading ? "Updating..." : "Update Role"}
+          {loading ? "Updating..." : "Update Status"}
         </button>
       </form>
     </div>
   );
 };
 
-export default UpdateUserRole;
+export default UpdatedStatus;

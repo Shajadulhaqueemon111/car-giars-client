@@ -92,7 +92,7 @@ const UpdateCar: React.FC = () => {
       }
 
       const response = await axios.patch<ApiResponse>(
-        `http://localhost:5000/api/v1/cars/${carId}`,
+        `https://apollo-gears-backend-tau.vercel.app/api/v1/cars/${carId}`,
         updatedData,
         {
           headers: {

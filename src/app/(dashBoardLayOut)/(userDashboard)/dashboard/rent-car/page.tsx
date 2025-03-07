@@ -45,7 +45,6 @@ const RentCar = () => {
 
       if (response.data) {
         setRents(response.data.data); // ✅ TypeScript now recognizes 'data'
-        toast.success("Rents retrieved successfully!");
       } else {
         console.warn("⚠️ No rental data found");
         toast.error("No rental data available.");

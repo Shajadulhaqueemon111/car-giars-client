@@ -36,7 +36,7 @@ const UpdatedStatus: React.FC = () => {
     try {
       const response = await axios.request<ApiResponse>({
         method: "PATCH",
-        url: `http://localhost:5000/api/v1/rents/${rentId}`,
+        url: `https://apollo-gears-backend-tau.vercel.app/api/v1/rents/${rentId}`,
         data: { rentStatus },
         headers: {
           Authorization: ` ${token}`,
@@ -49,7 +49,7 @@ const UpdatedStatus: React.FC = () => {
         setMessage("✅ User rent status updated successfully!");
         router.push("/dashboard/rent-car");
         // Reset form after success
-        setrentStatus("users");
+        setrentStatus("pending");
       } else {
         setMessage("⚠️ Failed to update user role.");
       }
@@ -64,7 +64,6 @@ const UpdatedStatus: React.FC = () => {
 
   return (
     <div className="p-6 border rounded-lg shadow-md max-w-md mx-auto">
-      <h1>Just Admin and Driver role Updated</h1>
       <h2 className="text-xl font-bold mb-4">Update User Role</h2>
 
       {message && <p className="mb-3 text-green-600">{message}</p>}

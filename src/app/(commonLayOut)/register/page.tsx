@@ -6,6 +6,7 @@ import GoogleLoginBtn from "../components/pages/shared/GoogleLoginBtn";
 
 import nexiosInstance from "@/config/nexious.config";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 interface RegisterResponse {
   success?: boolean;
   message?: string;
@@ -13,7 +14,7 @@ interface RegisterResponse {
 }
 const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
-
+  const router = useRouter();
   const handelRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -39,6 +40,7 @@ const RegisterPage = () => {
 
       if (res.data?.success) {
         toast.success("User registered successfully");
+        router.push("/login");
       } else {
         toast.error("User Already Exists");
       }

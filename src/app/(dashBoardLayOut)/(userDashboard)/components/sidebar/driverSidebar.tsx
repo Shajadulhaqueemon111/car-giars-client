@@ -43,12 +43,10 @@ export const DriverSidebarWrapper = () => {
                 href="/driver-dashboard/rent-car"
               />
               <SidebarItem
-                isActive={
-                  pathname === "/driver-dashboard/users-management-rent-car"
-                }
-                title="users rent manage"
+                isActive={pathname === "/driver-dashboard/manage-all-bids"}
+                title="manage-all-bids"
                 icon={<User />}
-                href="/driver-dashboard/users-management-rent-car"
+                href="/driver-dashboard/manage-all-bids"
               />
 
               <SidebarItem

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useEffect, useState } from "react";
 import { getCookies } from "@/app/(commonLayOut)/login";
@@ -6,27 +5,28 @@ import nexiosInstance from "@/config/nexious.config";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import Swal from "sweetalert2";
-import { useParams } from "next/navigation";
 
-// Define Rent type
-interface Rent {
-  _id: string;
-  user: string;
-  car: string;
-  rentStatus: string;
-  startingPoint: string;
-  destination: string;
-}
-type ApiResponse = {
+// Define API Response and Bid types
+interface ApiResponse<T> {
   success: boolean;
-  message?: string;
-  role: string;
-};
-const RentAllCars = () => {
-  const [rents, setRents] = useState<Rent[]>([]);
+  message: string;
+  data: T;
+}
+
+interface Bid {
+  bidStatus: string;
+  _id: string;
+  bidAmount: number;
+  driverId: string;
+  rentId: string;
+  driverLocation: string;
+}
+
+const ManageAllBids = () => {
+  const [bids, setBids] = useState<Bid[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const fetchRents = async () => {
+  const fetchBids = async () => {
     const token = await getCookies();
     if (!token) {
       console.log("⚠️ No token found. Please login again.");
@@ -35,34 +35,35 @@ const RentAllCars = () => {
 
     try {
       setLoading(true);
-
-      const response = await nexiosInstance.get<{ data: Rent[] }>("/rents", {
+      // ✅ Correct API response type
+      const response = await nexiosInstance.get<ApiResponse<Bid[]>>("/bids", {
         headers: {
           Authorization: `${token}`,
           "Content-Type": "application/json",
         },
       });
 
-      if (response.data) {
-        setRents(response.data.data);
-        toast.success("Rents retrieved successfully!");
+      if (response.data.success) {
+        setBids(response.data.data);
+        toast.success("Bids retrieved successfully!");
       } else {
-        console.warn("⚠️ No rental data found");
-        toast.error("No rental data available.");
+        console.warn("⚠️ No bid data found");
+        toast.error("No bid data available.");
       }
     } catch (error) {
       console.error("❌ API Error:", error);
-      toast.error("Failed to retrieve rents.");
+      toast.error("Failed to retrieve bids.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Call fetchRents on component mount
+  // Call fetchBids on component mount
   useEffect(() => {
-    fetchRents();
+    fetchBids();
   }, []);
-  const handleDelete = async (rentId: string) => {
+
+  const handleDelete = async (bidId: string) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -76,8 +77,8 @@ const RentAllCars = () => {
         try {
           const token = await getCookies();
 
-          const response = await nexiosInstance.delete<ApiResponse>(
-            `/rents/${rentId}`,
+          const response = await nexiosInstance.delete<ApiResponse<null>>(
+            `/bids/${bidId}`, // ✅ Fix the endpoint
             {
               headers: {
                 Authorization: `${token}`,
@@ -86,78 +87,74 @@ const RentAllCars = () => {
           );
 
           if (response.data.success) {
-            setRents((prevUsers) =>
-              prevUsers.filter((rent: { _id: string }) => rent._id !== rentId)
-            );
+            setBids((prevBids) => prevBids.filter((bid) => bid._id !== bidId));
 
             Swal.fire({
               title: "Deleted!",
-              text: "Rent Car data has been deleted successfully.",
+              text: "Bid has been deleted successfully.",
               icon: "success",
             });
           } else {
             Swal.fire({
               title: "Failed!",
-              text: "Failed to delete the Rent Car.",
+              text: "Failed to delete the bid.",
               icon: "error",
             });
           }
         } catch (error) {
-          console.error("Error deleting user:", error);
+          console.error("Error deleting bid:", error);
           Swal.fire({
             title: "Error!",
-            text: "An error occurred while deleting the user.",
+            text: "An error occurred while deleting the bid.",
             icon: "error",
           });
         }
       }
     });
   };
+
   return (
     <div className="container mx-auto px-4">
-      <h1 className="text-2xl font-bold mb-4 text-center">Rent Car List</h1>
+      <h1 className="text-2xl font-bold mb-4 text-center">Bid List</h1>
 
       {loading ? (
         <p className="text-center">Loading...</p>
-      ) : rents.length > 0 ? (
+      ) : bids.length > 0 ? (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[600px] border border-gray-300">
             <thead>
               <tr className="bg-gray-200 text-sm sm:text-base">
                 <th className="border px-2 py-1">Rent ID</th>
-                <th className="border px-2 py-1">User ID</th>
-                <th className="border px-2 py-1">Car ID</th>
-                <th className="border px-2 py-1">Status</th>
-                <th className="border px-2 py-1">Starting Point</th>
-                <th className="border px-2 py-1">Destination</th>
+                <th className="border px-2 py-1">Driver ID</th>
+                <th className="border px-2 py-1">Bid Amount</th>
+                <th className="border px-2 py-1">Bid Status</th>
+                <th className="border px-2 py-1">Driver Location</th>
                 <th className="border px-2 py-1">Update</th>
                 <th className="border px-2 py-1">Delete</th>
               </tr>
             </thead>
             <tbody>
-              {rents.map((rent) => (
-                <tr key={rent._id} className="border text-sm hover:bg-gray-100">
-                  <td className="border px-2 py-1">{rent._id}</td>
-                  <td className="border px-2 py-1">{rent.user}</td>
-                  <td className="border px-2 py-1">{rent.car}</td>
+              {bids.map((bid) => (
+                <tr key={bid._id} className="border text-sm hover:bg-gray-100">
+                  <td className="border px-2 py-1">{bid.rentId}</td>
+                  <td className="border px-2 py-1">{bid.driverId}</td>
+                  <td className="border px-2 py-1">${bid.bidAmount}</td>
                   <td
                     className={`border px-2 py-1 text-white font-semibold ${
-                      rent.rentStatus === "pending"
+                      bid.bidStatus === "pending"
                         ? "bg-yellow-500"
-                        : rent.rentStatus === "ongoing"
+                        : bid.bidStatus === "accepted"
                         ? "bg-blue-500"
-                        : rent.rentStatus === "completed"
+                        : bid.bidStatus === "rejected"
                         ? "bg-green-500"
                         : "bg-gray-500"
                     }`}
                   >
-                    {rent.rentStatus}
+                    {bid.bidStatus || "N/A"}
                   </td>
-
-                  <td className="border px-2 py-1">{rent.startingPoint}</td>
-                  <td className="border px-2 py-1">{rent.destination}</td>
+                  <td className="border px-2 py-1">{bid.driverLocation}</td>
                   <td className="border px-2 py-1">
-                    <Link href={`/admin-dashboard/rent-all-cars/${rent._id}`}>
+                    <Link href={`/driver-dashboard/manage-all-bids/${bid._id}`}>
                       <button className="btn btn-accent text-xs sm:text-sm">
                         Update
                       </button>
@@ -165,7 +162,7 @@ const RentAllCars = () => {
                   </td>
                   <td className="border px-2 py-1">
                     <button
-                      onClick={() => handleDelete(rent._id)}
+                      onClick={() => handleDelete(bid._id)}
                       className="btn btn-error text-xs sm:text-sm"
                     >
                       Delete
@@ -177,10 +174,10 @@ const RentAllCars = () => {
           </table>
         </div>
       ) : (
-        <p className="text-center">No rental records found.</p>
+        <p className="text-center">No bid records found.</p>
       )}
     </div>
   );
 };
 
-export default RentAllCars;
+export default ManageAllBids;

@@ -14,7 +14,7 @@ const ContactDeller = () => {
   const handelContactDeller = async (e: any) => {
     e.preventDefault();
 
-    const startingPoint = e.target.startingPoint.value; // ✅ input value পাওয়া
+    const startingPoint = e.target.startingPoint.value;
     const destination = e.target.destination.value;
 
     const rentCarData = {
@@ -24,7 +24,7 @@ const ContactDeller = () => {
       user: user?._id,
     };
 
-    console.log("Rent Car Data:", rentCarData); // ✅ Debugging
+    console.log("Rent Car Data:", rentCarData);
     const token = await getCookies();
     if (!token) {
       console.log("⚠️ No token found. Please login again.", token);
@@ -55,7 +55,7 @@ const ContactDeller = () => {
           </label>
           <input
             type="text"
-            name="startingPoint" // ✅ name attribute ঠিক করা
+            name="startingPoint"
             placeholder="Enter starting point"
             className="input input-bordered"
             required
@@ -67,7 +67,7 @@ const ContactDeller = () => {
           </label>
           <input
             type="text"
-            name="destination" // ✅ name attribute add করা
+            name="destination"
             placeholder="Enter destination"
             className="input input-bordered"
             required
@@ -75,7 +75,7 @@ const ContactDeller = () => {
         </div>
         <div className="form-control mt-6">
           <button type="submit" className="btn btn-primary">
-            Rent Car {/* ✅ Button label ঠিক করা */}
+            Rent Car
           </button>
         </div>
       </form>
